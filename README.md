@@ -2,6 +2,9 @@ Nama: Aaron Nathanael Suhaendi
 NPM: 2406437073
 Kelas: Adpro - A
 
+
+MODULE 1
+
 Reflection 1
 
 Clean Code Principles and Secure Coding
@@ -46,3 +49,43 @@ Masalah utamanya adalah Code Duplication. Ini akan melanggar prinsip DRY (Don't 
 Kenapa ini masalah? Jika suatu saat saya perlu mengubah cara inisialisasi driver atau mengganti port konfigurasi, saya harus mengubahnya secara manual di semua file test suite (CreateProductFunctionalTest, functional test baru, dll). Ini membuat kode susah untuk di maintenance dan rawan error kalau ada satu file yang lupa buat diubah.
 
 Saran Perbaikan: Solusinya adalah membuat sebuah Base Test Class (misalnya BaseFunctionalTest.java). Di dalam class ini, kita simpan semua setup umum seperti @LocalServerPort, inisialisasi driver, dan method @BeforeEach. Nanti, CreateProductFunctionalTest dan functional test suite yang baru tinggal melakukan extends ke class base tersebut. Dengan begitu, kode setup hanya ditulis satu kali dan bisa dipakai ulang (reusable), sehingga kode jadi lebih clean.
+
+
+
+
+MODULE 2
+
+Nomor 1 : List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them
+
+
+Selama mengerjakan exercise ini, saya menemukan dan memperbaiki 4 code quality issues utama yang dideteksi oleh SonarCloud:
+
+1. Group dependencies by their destination (build.gradle.kts)
+
+Masalah: Deklarasi dependencies di dalam file Gradle berantakan dan tidak dikelompokkan berdasarkan tipenya (seperti implementation, testImplementation, compileOnly, dll).
+
+Strategi: Saya menyusun ulang baris-baris dependencies tersebut agar mengelompok sesuai dengan tujuannya. Strategi ini sangat penting untuk maintainability, sehingga developer lain bisa dengan cepat melihat library mana yang dipakai untuk production dan mana yang khusus untuk testing.
+
+2. Remove this field injection and use constructor injection instead (ProductController.java)
+
+Masalah: Saya menggunakan @Autowired langsung pada field ProductService (Field Injection). SonarCloud menandai ini sebagai Major Code Smell terkait Reliability dan Maintainability.
+
+Strategi: Saya menghapus anotasi @Autowired pada field dan membuat Constructor yang menerima parameter ProductService (Constructor Injection). Ini adalah best practice dalam Spring Boot karena membuat dependencies menjadi eksplisit, dan juga mencegah objek dibuat dalam state yang tidak valid (tanpa dependency), dan yang paling penting adlah membuat kode jauh lebih mudah untuk di test.
+
+3. Add at least one assertion to this test case (EshopApplicationTests.java)
+
+Masalah: Terdapat sebuah method test yang kosong atau tidak memiliki assert sama sekali.
+
+Strategi: Saya menambahkan assertion sederhana di dalam method tersebut (misalnya mengecek apakah context berhasil di load atau menggunakan assert yang relevan). Strategi ini memastikan bahwa tes tersebut benar-benar memvalidasi sesuatu dan berguna sebagai safety net aplikasi.
+
+4. Remove this unused import 'java.util.Iterator' (ProductServiceImplTest.java)
+
+Masalah: Terdapat import class di bagian atas file yang sebenarnya sama sekali tidak digunakan di dalam baris kode di bawahnya.
+
+Strategi: Saya menghapus baris import tersebut. Meskipun terlihatny sepele, membersihkan kode dari import yang tidak terpakai adalah praktik Clean Code yang baik untuk mengurangi clutter dan menghindari kebingungan saat sedang membaca kode.
+
+
+
+Nomor 2 : Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!
+
+Ya, menurut saya implementasi workflow GitHub yang ada saat ini sudah sangat memenuhi definisi Continuous Integration (CI) maupun Continuous Deployment (CD). Dari sisi Continuous Integration, setiap kali terdapat perubahan kode yang di push atau di merge, GitHub Actions secara otomatis akan menjalankan proses build, mengeksekusi unit test suite (beserta laporan coverage dari JaCoCo), dan melakukan analisis kualitas kode menggunakan SonarCloud. Proses otomatis ini memastikan bahwa kode baru yang diintegrasikan aman, tidak merusak fitur yang sudah ada, dan memenuhi standar kualitas sebelum benar-benar digabungkan ke repositori utama. Sementara itu, dari sisi Continuous Deployment, alur kerja ini juga sudah berjalan dengan baik karena integrasi dengan Koyeb. Setiap kali ada kode yang berhasil di merge ke branch main, Koyeb akan secara otomatis mendeteksi perubahan tersebut (menggunakan pull-based approach), melakukan build pada Docker image, lalu mengdeploy aplikasi langsung ke server production.
