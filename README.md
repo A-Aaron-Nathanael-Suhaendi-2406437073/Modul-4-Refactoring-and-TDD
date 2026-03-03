@@ -98,17 +98,17 @@ MODULE 3
 
 Nomor 1 :  Explain what principles you apply to your project!
 
-Pada proyek ini, saya telah menerapkan kelima prinsip SOLID:
+Pada proyek ini, saya telah menerapkan kelima prinsip SOLID (4 yang saya apply, yaitu SRP, OCP, LSP, DIP):
 
 Single Responsibility Principle (SRP): Saya memisahkan ProductController dan CarController ke dalam 2 file Java yang berbeda. Sekarang, setiap controller hanya memiliki satu alasan untuk berubah (satu fokus tanggung jawab), yaitu mengurus rutenya masing-masing (satu ngurusin rute Product, satu ngurusin rute Car).
 
-Open-Closed Principle (OCP): Saya sudah mengimplementasikan ini di code before-solid, yaitu penggunaan interface CarService memungkinkan sistem untuk lebih terbuka terhadap ekstensi/penambahan fitur baru tanpa memodifikasi kode lama. Jika ke depannya ada layanan Car baru, saya cukup membuat class baru yang mengimplementasikan interface tersebut.
+Open-Closed Principle (OCP): Selain penggunaan interface CarService yang memungkinkan sistem terbuka terhadap penambahan fitur, saya juga menyempurnakan OCP dengan mengubah CarRepository menjadi sebuah interface dan memisahkan implementasi konkritnya ke CarRepositoryImpl. Jika ke depannya aplikasi beralih menggunakan database asli (seperti PostgreSQL), saya cukup membuat class baru yang mengimplementasikan interface tersebut tanpa perlu memodifikasi kode yang sudah ada.
 
 Liskov Substitution Principle (LSP): Saya menghapus hierarki inheritance (extends ProductController) pada CarController. Sebuah mobil (Car) bukanlah anak dari entitas produk (Product) secara konseptual di arsitektur ini. Memisahkan keduanya memastikan perilaku program tetap konsisten.
 
 Interface Segregation Principle (ISP): Saya sudah mengimplementasikan ini di code before-solid, Interface CarService dibuat spesifik dan berukuran kecil (hanya berisi metode CRUD khusus car). Class yang mengimplementasikan interface ini juga tidak dipaksa untuk override fungsi-fungsi yang tidak berhubungan.
 
-Dependency Inversion Principle (DIP): Saya mengubah cara injeksi dependensi dari Field Injection (@Autowired di atas variabel) menjadi Constructor Injection. Selain itu, modul CarController sekarang bergantung pada abstraksi (interface CarService), bukan lagi pada implementasi konkritnya (CarServiceImpl).
+Dependency Inversion Principle (DIP): Saya mengubah cara injeksi dependensi dari Field Injection (@Autowired di atas variabel) menjadi Constructor Injection. Selain itu, komponen tingkat tinggi sekarang bergantung pada abstraksi, bukan kelas konkrit: CarController bergantung pada interface CarService, dan CarServiceImpl bergantung pada interface CarRepository.
 
 
 
@@ -118,13 +118,13 @@ Keuntungan utama menerapkan SOLID adalah membuat kode menjadi lebih maintainable
 
 Contoh SRP: Jika terdapat bug pada fitur routing mobil, saya tahu persis saya hanya perlu memeriksa file CarController.java tanpa takut merusak fitur atau mengganggu code milik Product. File code juga menjadi lebih pendek dan mudah dibaca.
 
-Contoh DIP dan OCP: Dengan bergantung pada abstraksi (interface CarService) dan menggunakan Constructor Injection, kode saya menjadi sangat mudah untuk dilakukan Unit Testing. Saya bisa dengan mudah memasukkan objek tiruan (mock data) lewat constructor tanpa harus menjalankan server secara penuh. Jika ke depannya saya beralih menggunakan database lain, saya hanya perlu membuat class CarServiceBaruImpl.java tanpa perlu mengubah satu baris pun di CarController.java.
+Contoh DIP dan OCP: Dengan bergantung pada abstraksi (interface CarService dan CarRepository) serta menggunakan Constructor Injection, kode saya menjadi sangat mudah untuk dilakukan Unit Testing. Saya bisa dengan mudah memasukkan objek tiruan (mock data) lewat constructor tanpa harus menjalankan server secara penuh. Jika ke depannya proyek ini beralih dari penyimpanan memori (ArrayList) ke basis data nyata, saya hanya perlu membuat class CarRepositoryPostgresImpl.java tanpa perlu mengubah satu baris pun di CarServiceImpl.java.
 
 
 Nomor 3 : Explain the disadvantages of not applying SOLID principles to your project with examples.
 
 Tidak menerapkan prinsip SOLID akan membuat kode menjadi kaku (rigid), rapuh (fragile), dan sangat sulit dikelola seiring membesarnya ukuran proyek (biasanya disebut Spaghetti Code).
 
-Contoh (Pelanggaran SRP): Saat CarController masih tergabung di dalam file ProductController.java (sebelum refactoring), file tersebut menanggung terlalu banyak beban. Jika proyek membesar dan memiliki fitur User, Payment, dll yang juga ditumpuk di satu file, file tersebut bisa mencapai ribuan baris kode yang akan menyulitkan developer saat mencari letak error.
+Contoh (Pelanggaran SRP): Saat CarController masih tergabung di dalam file ProductController.java (sebelum refactoring), file tersebut menanggung terlalu banyak beban. Jika proyek membesar dan memiliki fitur User, Payment, dll yang juga ditumpuk di satu file, file tersebut bisa mencapai ribuan baris kode yang akan sangat menyulitkan developer saat mencari letak error.
 
-Contoh (Pelanggaran DIP): Saat menggunakan Field Injection (@Autowired private CarServiceImpl carservice;), Controller bergantung pada satu class konkrit yang sangat spesifik. Ini membuat kode sangat kaku. Jika nanti tiba2 kita diminta algoritma service yang baru, saya terpaksa harus membongkar ulang isi Controller, yang beresiko memunculkan error baru di tempat yang lain.
+Contoh (Pelanggaran DIP dan OCP): Saat menggunakan Field Injection (@Autowired private CarServiceImpl carservice;), Controller bergantung pada satu class konkrit yang sangat spesifik. Begitu juga jika Service bergantung langsung pada CarRepository versi ArrayList. Ini membuat kode sangat kaku. Jika nanti tiba-tiba kita diminta mengganti algoritma penyimpanan atau layanan, saya terpaksa harus membongkar ulang dan menghapus kode lama di Controller atau Service, ini  bisa berisiko tinggi memunculkan error baru di tempat lain.
