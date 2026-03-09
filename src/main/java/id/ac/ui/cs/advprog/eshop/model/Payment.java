@@ -18,36 +18,14 @@ public class Payment {
         this.method = method;
         this.paymentData = paymentData;
 
+        boolean isValid = false;
         if ("VOUCHER".equals(method)) {
-            String voucherCode = paymentData.get("voucherCode");
-
-            if (voucherCode != null && voucherCode.length() == 16 && voucherCode.startsWith("ESHOP")) {
-                int numCount = 0;
-                for (char c : voucherCode.toCharArray()) {
-                    if (Character.isDigit(c)) numCount++;
-                }
-                if (numCount == 8) {
-                    this.status = "SUCCESS";
-                } else {
-                    this.status = "REJECTED";
-                }
-            } else {
-                this.status = "REJECTED";
-            }
-
+            isValid = validateVoucher();
         } else if ("CASH_ON_DELIVERY".equals(method)) {
-            String address = paymentData.get("address");
-            String deliveryFee = paymentData.get("deliveryFee");
-
-            if (address == null || address.isEmpty() || deliveryFee == null || deliveryFee.isEmpty()) {
-                this.status = "REJECTED";
-            } else {
-                this.status = "SUCCESS";
-            }
-
-        } else {
-            this.status = "REJECTED";
+            isValid = validateCOD();
         }
+
+        this.status = isValid ? "SUCCESS" : "REJECTED";
     }
 
     public Payment(String id, String method, String status, Map<String, String> paymentData) {
@@ -55,5 +33,25 @@ public class Payment {
         this.method = method;
         this.status = status;
         this.paymentData = paymentData;
+    }
+
+    private boolean validateVoucher() {
+        String voucherCode = paymentData.get("voucherCode");
+        if (voucherCode == null || voucherCode.length() != 16 || !voucherCode.startsWith("ESHOP")) {
+            return false;
+        }
+
+        int numCount = 0;
+        for (char c : voucherCode.toCharArray()) {
+            if (Character.isDigit(c)) numCount++;
+        }
+        return numCount == 8;
+    }
+
+    private boolean validateCOD() {
+        String address = paymentData.get("address");
+        String deliveryFee = paymentData.get("deliveryFee");
+
+        return address != null && !address.isEmpty() && deliveryFee != null && !deliveryFee.isEmpty();
     }
 }
