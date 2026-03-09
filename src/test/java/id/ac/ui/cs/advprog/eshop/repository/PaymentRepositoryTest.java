@@ -97,6 +97,6 @@ class PaymentRepositoryTest {
     @Test
     void testFindAllIfEmpty() {
         List<Payment> paymentList = paymentRepository.findAll();
-        assertNull(paymentList);
+        assertTrue(paymentList.isEmpty());
     }
 }
