@@ -5,6 +5,8 @@ import lombok.Getter;
 
 import java.util.Map;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+
 @Builder
 @Getter
 public class Payment {
@@ -25,7 +27,7 @@ public class Payment {
             isValid = validateCOD();
         }
 
-        this.status = isValid ? "SUCCESS" : "REJECTED";
+        this.status = isValid ? PaymentStatus.SUCCESS.getValue() : PaymentStatus.REJECTED.getValue();
     }
 
     public Payment(String id, String method, String status, Map<String, String> paymentData) {

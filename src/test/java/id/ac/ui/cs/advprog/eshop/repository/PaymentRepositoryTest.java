@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.repository;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,13 +51,13 @@ class PaymentRepositoryTest {
         Payment payment = payments.get(0);
         paymentRepository.save(payment);
 
-        Payment newPayment = new Payment(payment.getId(), payment.getMethod(), "REJECTED", payment.getPaymentData());
+        Payment newPayment = new Payment(payment.getId(), payment.getMethod(), PaymentStatus.REJECTED.getValue(), payment.getPaymentData());
         Payment result = paymentRepository.save(newPayment);
 
         Payment findResult = paymentRepository.findById(payments.get(0).getId());
         assertEquals(payment.getId(), result.getId());
         assertEquals(payment.getId(), findResult.getId());
-        assertEquals("REJECTED", findResult.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), findResult.getStatus());
         assertEquals(payment.getMethod(), findResult.getMethod());
         assertEquals(payment.getPaymentData(), findResult.getPaymentData());
     }
