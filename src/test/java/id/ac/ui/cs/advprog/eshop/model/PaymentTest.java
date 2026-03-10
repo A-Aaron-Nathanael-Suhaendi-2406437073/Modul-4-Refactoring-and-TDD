@@ -2,6 +2,8 @@ package id.ac.ui.cs.advprog.eshop.model;
 
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,27 +20,12 @@ class PaymentTest {
         assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
     }
 
-    @Test
-    void testCreatePaymentVoucherRejectedLength() {
+    @ParameterizedTest
+    @ValueSource(strings = {"ESHOP123", "KSHOP1234ABC5678", "ESHOP1234ABC567A"})
+    void testCreatePaymentVoucherRejected(String voucherCode) {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP123");
+        paymentData.put("voucherCode", voucherCode);
         Payment payment = new Payment("2", "VOUCHER", paymentData);
-        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
-    }
-
-    @Test
-    void testCreatePaymentVoucherRejectedStart() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "KSHOP1234ABC5678");
-        Payment payment = new Payment("3", "VOUCHER", paymentData);
-        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
-    }
-
-    @Test
-    void testCreatePaymentVoucherRejectedNumCount() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP1234ABC567A");
-        Payment payment = new Payment("4", "VOUCHER", paymentData);
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
