@@ -12,8 +12,6 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
 
-    private List<Order> orderList = new ArrayList<>();
-
     @GetMapping("/create")
     public String createOrderPage() {
         return "createOrder";

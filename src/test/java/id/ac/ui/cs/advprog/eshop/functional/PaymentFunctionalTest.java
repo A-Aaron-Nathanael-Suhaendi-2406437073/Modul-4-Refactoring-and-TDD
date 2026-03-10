@@ -31,31 +31,31 @@ class PaymentFunctionalTest {
     }
 
     @Test
-    void paymentDetailFormPage_isAccessible(ChromeDriver driver) throws Exception {
+    void paymentDetailFormPage_isAccessible(ChromeDriver driver)  {
         driver.get(baseUrl + "/payment/detail");
         assertEquals("Payment Detail Form", driver.getTitle());
     }
 
     @Test
-    void paymentDetailPageById_isAccessible(ChromeDriver driver) throws Exception {
+    void paymentDetailPageById_isAccessible(ChromeDriver driver)  {
         driver.get(baseUrl + "/payment/detail/dummy-payment-123");
         assertEquals("Payment Detail", driver.getTitle());
     }
 
     @Test
-    void paymentAdminListPage_isAccessible(ChromeDriver driver) throws Exception {
+    void paymentAdminListPage_isAccessible(ChromeDriver driver)  {
         driver.get(baseUrl + "/payment/admin/list");
         assertEquals("All Payments", driver.getTitle());
     }
 
     @Test
-    void paymentAdminDetailPage_isAccessible(ChromeDriver driver) throws Exception {
+    void paymentAdminDetailPage_isAccessible(ChromeDriver driver)  {
         driver.get(baseUrl + "/payment/admin/detail/dummy-payment-123");
         assertEquals("Review Payment", driver.getTitle());
     }
 
     @Test
-    void paymentAdminSetStatus_updatesAndRedirects(ChromeDriver driver) throws Exception {
+    void paymentAdminSetStatus_updatesAndRedirects(ChromeDriver driver)  {
         driver.get(baseUrl + "/payment/admin/detail/dummy-payment-123");
         driver.findElement(By.cssSelector("button[type='submit']")).click();
         assertEquals("All Payments", driver.getTitle());
