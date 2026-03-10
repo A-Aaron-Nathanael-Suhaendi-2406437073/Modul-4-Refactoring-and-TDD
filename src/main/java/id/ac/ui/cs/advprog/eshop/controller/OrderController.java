@@ -37,4 +37,16 @@ public class OrderController {
         model.addAttribute("orders", filteredOrders);
         return "orderList";
     }
+
+    @GetMapping("/pay/{orderId}")
+    public String payOrderPage(@PathVariable String orderId, Model model) {
+        model.addAttribute("orderId", orderId);
+        return "paymentOrder";
+    }
+
+    @PostMapping("/pay/{orderId}")
+    public String payOrderPost(@PathVariable String orderId) {
+        String dummyPaymentId = "PAY-" + orderId;
+        return "redirect:/payment/detail/" + dummyPaymentId;
+    }
 }
