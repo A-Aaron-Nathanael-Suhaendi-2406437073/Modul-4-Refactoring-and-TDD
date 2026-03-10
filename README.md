@@ -128,3 +128,77 @@ Tidak menerapkan prinsip SOLID akan membuat kode menjadi kaku (rigid), rapuh (fr
 Contoh (Pelanggaran SRP): Saat CarController masih tergabung di dalam file ProductController.java (sebelum refactoring), file tersebut menanggung terlalu banyak beban. Jika proyek membesar dan memiliki fitur User, Payment, dll yang juga ditumpuk di satu file, file tersebut bisa mencapai ribuan baris kode yang akan sangat menyulitkan developer saat mencari letak error.
 
 Contoh (Pelanggaran DIP dan OCP): Saat menggunakan Field Injection (@Autowired private CarServiceImpl carservice;), Controller bergantung pada satu class konkrit yang sangat spesifik. Begitu juga jika Service bergantung langsung pada CarRepository versi ArrayList. Ini membuat kode sangat kaku. Jika nanti tiba-tiba kita diminta mengganti algoritma penyimpanan atau layanan, saya terpaksa harus membongkar ulang dan menghapus kode lama di Controller atau Service, ini  bisa berisiko tinggi memunculkan error baru di tempat lain.
+
+
+
+MODULE 4
+
+
+Reflection 1
+
+Nomor 1 : Reflection on TDD usefulness based on Percival's (2017) objectives
+
+Menjawab evaluasi obyektif pengujian dari Percival (2017), secara keseluruhan alur TDD ini sudah terasa cukup berguna bagi saya, meskipun ada beberapa penyesuaian yang harus saya rasakan di awal. Berikut adalah penjabaran dari ketiga obyektif tersebut:
+
+Correctness (Kebenaran): TDD memaksa saya untuk memikirkan semua skenario dan edge cases secara menyeluruh sejak awal. Contohnya, saat membuat OrderTest, saya langsung dipaksa membuat tes untuk status pesanan yang invalid atau list produk yang kosong. Hal ini memberi saya kepastian fungsional dari sudut pandang pengguna bahwa aplikasinya benar-benar bekerja sesuai ekspektasi.
+
+Maintainability (Kemudahan Pemeliharaan): Ini adalah manfaat TDD yang paling terasa. Tes yang sudah saya buat di fase awal memberikan rasa percaya diri yang tinggi untuk melakukan refactoring tanpa rasa takut akan merusak kode yang sudah ada. Ketika saya harus mengubah kode status dari tulisan teks biasa menjadi Enum OrderStatus, tes yang sudah ada langsung memastikan bahwa perubahan yang saya lakukan tidak merusak desain program.
+
+Productive Workflow (Alur Kerja Produktif): Di obyektif ini, sejujurnya saya merasa masih butuh adaptasi. Pada awalnya, keharusan menulis kode tes yang dipastikan gagal (fase RED) terlebih dahulu terasa memperlambat alur kerja, sehingga feedback cycles terasa sedikit lambat di awal. Ke depannya, hal yang perlu saya lakukan adalah membiasakan ritme TDD ini agar saya tidak merasa terlalu lama menunggu dalam menulis tes, dan pada akhirnya bisa mendapatkan peringatan dini terkait bug dengan lebih mulus dan produktif.
+
+
+
+Nomor 2 : Reflection on F.I.R.S.T. principles implementation
+
+Menurut saya, unit test yang sudah saya kerjakan di sesi tutorial ini sebagian besar sudah berhasil mematuhi prinsip F.I.R.S.T:
+
+Fast (Cepat): Tes berjalan sangat cepat (hanya dalam hitungan milidetik) karena saya tidak perlu menyalakan database asli, melainkan menggunakan memori data lokal (ArrayList) dan memanfaatkan fitur mocking (Mockito) pada OrderServiceImpl.
+
+Independent (Mandiri): Setiap test case berdiri sendiri dan tidak saling memengaruhi. Penggunaan anotasi @BeforeEach sangat membantu untuk me-reset dan menyiapkan objek dummy sebelum setiap tes dijalankan, sehingga tidak ada "sampah data" yang bocor ke tes selanjutnya.
+
+Repeatable (Dapat Diulang): Tes ini bisa dieksekusi secara berulang dengan hasil yang konsisten, baik di lingkungan lokal IntelliJ milik saya maupun ketika dijalankan di dalam pipeline otomatis seperti GitHub Actions.
+
+Self-Validating (Memvalidasi Sendiri): Seluruh tes sudah menghasilkan output mutlak (berhasil atau gagal) tanpa perlu dievaluasi secara manual oleh mata manusia. Penggunaan fungsi seperti assertEquals, assertNull, dan assertThrows membuat IDE langsung menampilkan indikator hijau atau merah dengan jelas.
+
+Timely (Tepat Waktu): Karena tugas ini mengharuskan saya mempraktikkan TDD, maka prinsip ini secara otomatis sudah terpenuhi. Unit tests dibuat secara tepat waktu persis sebelum kode produksinya (Order, OrderRepository, OrderService) ditulis.
+
+Hal yang perlu saya lakukan ke depannya:
+Meskipun prinsip dasar sudah tercapai, ke depannya saya perlu lebih memperhatikan seberapa rapi penulisan kode tes tersebut (clean test code). Terkadang setup data dummy nya masih cukup repetitif dan panjang. Saya harus membiasakan diri untuk memecah tes kompleks agar benar-benar hanya berfokus menguji satu single behavior saja, sehingga prinsip Independent dan Fast bisa dipertahankan ketika sistemnya menjadi lebih besar.
+
+
+
+Reflection 2 (BONUS 2)
+Di sini, saya memeriksa code milik teman kelompok saya Jovian Felix Rustan (2406360016)
+
+
+1. What do you think about your partner's code? Are there any aspects that are still lacking?
+Secara fungsional, kode yang disusun oleh rekan saya sudah berjalan dengan baik dan memenuhi requirement fitur yang diminta. Struktur class dan penamaan variabelnya juga cukup deskriptif sehingga alur logika mudah dipahami. Namun, dari aspek clean code dan maintainability, masih terdapat beberapa kekurangan. Hal yang paling menonjol adalah adanya ketergantungan antar komponen yang masih menggunakan Field Injection, adanya redundansi logika pada Controller, serta beberapa unused code dan deklarasi exception yang tidak perlu di dalam kelas pengujian. Aspek-aspek ini jika dibiarkan dapat mempersulit proses unit testing dan pengembangan di masa depan.
+
+2. What did you do to contribute to your partner's code?
+Kontribusi saya berfokus pada proses Quality Assurance melalui Code Review dan pelaksanaan refaktorisasi. Saya melakukan identifikasi terhadap berbagai code smell yang terdeteksi secara manual maupun melalui standar SonarCloud. Setelah itu, saya memberikan saran perbaikan dan melakukan implementasi refaktorisasi pada beberapa class utama seperti OrderController, PaymentController, serta beberapa class Service dan Test untuk memastikan kode tersebut memenuhi standar best practices dalam pengembangan Spring Boot.
+
+3. What code smells did you find on your partner's code?
+Beberapa code smell yang saya temukan meliputi:
+
+1. Dependency Injection Issue: Penggunaan @Autowired langsung pada field (Field Injection) di kelas Service dan Controller.
+
+2. Code Duplication (DRY Principle): Terdapat logika pengisian data model yang serupa di beberapa method pada OrderController.
+
+3. Unused Code: Adanya variabel privat dan deklarasi throws Exception pada Functional Test yang tidak pernah digunakan.
+
+4. Magic Strings: Penggunaan literal string yang berulang untuk nama view (seperti "orderHistory").
+
+5. Redundant Assertions: Pemanggilan lebih dari satu metode di dalam lambda assertThrows yang berisiko menimbulkan false positive.
+
+4. What refactoring steps did you suggest and execute to fix those smells?
+Langkah-langkah refaktorisasi yang saya sarankan dan eksekusi adalah:
+
+1. Mengubah Injection Style: Mengganti Field Injection menjadi Constructor Injection menggunakan keyword final untuk menjamin immutability dan mempermudah pengujian manual.
+
+2. Extract Method: Mengambil logika yang berulang pada OrderController dan memindahkannya ke dalam satu private helper method (populateHistoryModel).
+
+3. Konstanta untuk Literal: Mendefinisikan konstanta static final String untuk menggantikan literal string yang muncul berulang kali.
+
+4. Clean Up: Menghapus variabel yang tidak terpakai dan menyederhanakan deklarasi metode pada kelas pengujian.
+
+5. Refactoring Unit Test: Mengonsolidasikan tes yang serupa menggunakan @ParameterizedTest dan memisahkan kode persiapan dari dalam blok assertThrows agar pengujian lebih akurat.
