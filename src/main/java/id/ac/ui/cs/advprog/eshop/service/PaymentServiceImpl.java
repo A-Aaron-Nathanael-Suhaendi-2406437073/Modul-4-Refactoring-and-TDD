@@ -16,10 +16,12 @@ import java.util.Map;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public PaymentServiceImpl(PaymentRepository paymentRepository) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository, OrderRepository orderRepository) {
         this.paymentRepository = paymentRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
