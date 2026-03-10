@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Create New Order</h2>
+    <form th:action="@{/order/create}" method="post">
+        <p>Are you sure you want to create an order with items in your cart?</p>
+        <button type="submit" class="btn btn-primary">Submit Order</button>
+        <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
