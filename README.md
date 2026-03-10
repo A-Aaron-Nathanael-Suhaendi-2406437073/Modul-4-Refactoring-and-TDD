@@ -163,6 +163,7 @@ Self-Validating (Memvalidasi Sendiri): Seluruh tes sudah menghasilkan output mut
 Timely (Tepat Waktu): Karena tugas ini mengharuskan saya mempraktikkan TDD, maka prinsip ini secara otomatis sudah terpenuhi. Unit tests dibuat secara tepat waktu persis sebelum kode produksinya (Order, OrderRepository, OrderService) ditulis.
 
 Hal yang perlu saya lakukan ke depannya:
+
 Meskipun prinsip dasar sudah tercapai, ke depannya saya perlu lebih memperhatikan seberapa rapi penulisan kode tes tersebut (clean test code). Terkadang setup data dummy nya masih cukup repetitif dan panjang. Saya harus membiasakan diri untuk memecah tes kompleks agar benar-benar hanya berfokus menguji satu single behavior saja, sehingga prinsip Independent dan Fast bisa dipertahankan ketika sistemnya menjadi lebih besar.
 
 
@@ -172,33 +173,39 @@ Di sini, saya memeriksa code milik teman kelompok saya Jovian Felix Rustan (2406
 
 
 1. What do you think about your partner's code? Are there any aspects that are still lacking?
+
 Secara fungsional, kode yang disusun oleh rekan saya sudah berjalan dengan baik dan memenuhi requirement fitur yang diminta. Struktur class dan penamaan variabelnya juga cukup deskriptif sehingga alur logika mudah dipahami. Namun, dari aspek clean code dan maintainability, masih terdapat beberapa kekurangan. Hal yang paling menonjol adalah adanya ketergantungan antar komponen yang masih menggunakan Field Injection, adanya redundansi logika pada Controller, serta beberapa unused code dan deklarasi exception yang tidak perlu di dalam kelas pengujian. Aspek-aspek ini jika dibiarkan dapat mempersulit proses unit testing dan pengembangan di masa depan.
 
 2. What did you do to contribute to your partner's code?
+
 Kontribusi saya berfokus pada proses Quality Assurance melalui Code Review dan pelaksanaan refaktorisasi. Saya melakukan identifikasi terhadap berbagai code smell yang terdeteksi secara manual maupun melalui standar SonarCloud. Setelah itu, saya memberikan saran perbaikan dan melakukan implementasi refaktorisasi pada beberapa class utama seperti OrderController, PaymentController, serta beberapa class Service dan Test untuk memastikan kode tersebut memenuhi standar best practices dalam pengembangan Spring Boot.
 
 3. What code smells did you find on your partner's code?
+
 Beberapa code smell yang saya temukan meliputi:
 
-1. Dependency Injection Issue: Penggunaan @Autowired langsung pada field (Field Injection) di kelas Service dan Controller.
+Dependency Injection Issue: Penggunaan @Autowired langsung pada field (Field Injection) di kelas Service dan Controller.
 
-2. Code Duplication (DRY Principle): Terdapat logika pengisian data model yang serupa di beberapa method pada OrderController.
+Code Duplication (DRY Principle): Terdapat logika pengisian data model yang serupa di beberapa method pada OrderController.
 
-3. Unused Code: Adanya variabel privat dan deklarasi throws Exception pada Functional Test yang tidak pernah digunakan.
+Unused Code: Adanya variabel privat dan deklarasi throws Exception pada Functional Test yang tidak pernah digunakan.
 
-4. Magic Strings: Penggunaan literal string yang berulang untuk nama view (seperti "orderHistory").
+Magic Strings: Penggunaan literal string yang berulang untuk nama view (seperti "orderHistory").
 
-5. Redundant Assertions: Pemanggilan lebih dari satu metode di dalam lambda assertThrows yang berisiko menimbulkan false positive.
+Redundant Assertions: Pemanggilan lebih dari satu metode di dalam lambda assertThrows yang berisiko menimbulkan false positive.
+
+
 
 4. What refactoring steps did you suggest and execute to fix those smells?
+
 Langkah-langkah refaktorisasi yang saya sarankan dan eksekusi adalah:
 
-1. Mengubah Injection Style: Mengganti Field Injection menjadi Constructor Injection menggunakan keyword final untuk menjamin immutability dan mempermudah pengujian manual.
+Mengubah Injection Style: Mengganti Field Injection menjadi Constructor Injection menggunakan keyword final untuk menjamin immutability dan mempermudah pengujian manual.
 
-2. Extract Method: Mengambil logika yang berulang pada OrderController dan memindahkannya ke dalam satu private helper method (populateHistoryModel).
+Extract Method: Mengambil logika yang berulang pada OrderController dan memindahkannya ke dalam satu private helper method (populateHistoryModel).
 
-3. Konstanta untuk Literal: Mendefinisikan konstanta static final String untuk menggantikan literal string yang muncul berulang kali.
+Konstanta untuk Literal: Mendefinisikan konstanta static final String untuk menggantikan literal string yang muncul berulang kali.
 
-4. Clean Up: Menghapus variabel yang tidak terpakai dan menyederhanakan deklarasi metode pada kelas pengujian.
+Clean Up: Menghapus variabel yang tidak terpakai dan menyederhanakan deklarasi metode pada kelas pengujian.
 
-5. Refactoring Unit Test: Mengonsolidasikan tes yang serupa menggunakan @ParameterizedTest dan memisahkan kode persiapan dari dalam blok assertThrows agar pengujian lebih akurat.
+Refactoring Unit Test: Mengonsolidasikan tes yang serupa menggunakan @ParameterizedTest dan memisahkan kode persiapan dari dalam blok assertThrows agar pengujian lebih akurat.
