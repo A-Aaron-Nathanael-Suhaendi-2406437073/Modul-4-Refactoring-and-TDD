@@ -86,7 +86,7 @@ tasks.jacocoTestReport {
 
 sonar {
     properties {
-        property("sonar.projectKey", "A-Aaron-Nathanael-Suhaendi-2406437073_Modul-1-Coding-Standards")
+        property("sonar.projectKey", "A-Aaron-Nathanael-Suhaendi-2406437073_Modul-4-Refactoring-and-TDD")
         property("sonar.organization", "a-aaron-nathanael-suhaendi-2406437073")
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
     }
