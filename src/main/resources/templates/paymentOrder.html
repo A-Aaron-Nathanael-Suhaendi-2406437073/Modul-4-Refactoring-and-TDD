@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay Order</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Pay Order</h2>
+    <p>Are you sure you want to pay for Order ID: <span th:text="${orderId}"></span>?</p>
+
+    <form th:action="@{/order/pay/{id}(id=${orderId})}" method="post">
+        <button type="submit" class="btn btn-success">Pay Now</button>
+        <a th:href="@{/order/history}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
