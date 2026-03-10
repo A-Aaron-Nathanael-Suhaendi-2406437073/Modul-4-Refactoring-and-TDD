@@ -33,15 +33,13 @@ class OrderFunctionalTest {
     @Test
     void createOrderPage_isAccessible(ChromeDriver driver) throws Exception {
         driver.get(baseUrl + "/order/create");
-        String pageTitle = driver.getTitle();
-        assertEquals("Create Order", pageTitle);
+        assertEquals("Create Order", driver.getTitle());
     }
 
     @Test
     void orderHistoryPage_isAccessible(ChromeDriver driver) throws Exception {
         driver.get(baseUrl + "/order/history");
-        String pageTitle = driver.getTitle();
-        assertEquals("Order History Search", pageTitle);
+        assertEquals("Order History Search", driver.getTitle());
     }
 
     @Test
@@ -50,10 +48,20 @@ class OrderFunctionalTest {
         driver.findElement(By.id("author")).sendKeys("AaronNath11");
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
-        String pageTitle = driver.getTitle();
-        assertEquals("Order List", pageTitle);
+        assertEquals("Order List", driver.getTitle());
+        assertEquals("Order History for AaronNath11", driver.findElement(By.tagName("h2")).getText());
+    }
 
-        String headerText = driver.findElement(By.tagName("h2")).getText();
-        assertEquals("Order History for AaronNath11", headerText);
+    @Test
+    void orderPayPage_isAccessible(ChromeDriver driver) throws Exception {
+        driver.get(baseUrl + "/order/pay/dummy-order-123");
+        assertEquals("Pay Order", driver.getTitle());
+    }
+
+    @Test
+    void orderPayPost_submitsPayment(ChromeDriver driver) throws Exception {
+        driver.get(baseUrl + "/order/pay/dummy-order-123");
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
+        assertEquals("Payment Detail", driver.getTitle());
     }
 }
